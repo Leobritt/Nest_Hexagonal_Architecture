@@ -12,4 +12,12 @@ Content-Type: application/json
 "name": "My List1"
 }
 ###
+PATCH http://localhost:3000/lists/2
+Content-Type: application/json
+
+{
+"name": "My List List"
+}
+
+###
 DELETE http://localhost:3000/lists/1
