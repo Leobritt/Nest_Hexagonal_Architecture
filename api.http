@@ -1,0 +1,13 @@
+//Arquivo para fazer req http usando a extensão REST Client
+GET http://localhost:3000/lists
+
+###
+GET http://localhost:3000/lists/1
+
+###
+POST http://localhost:3000/lists
+Content-Type: application/json
+
+{
+"name": "My List"
+}
