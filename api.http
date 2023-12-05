@@ -9,5 +9,7 @@ POST http://localhost:3000/lists
 Content-Type: application/json
 
 {
-"name": "My List"
+"name": "My List1"
 }
+###
+DELETE http://localhost:3000/lists/1
