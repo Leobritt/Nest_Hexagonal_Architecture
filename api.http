@@ -9,19 +9,18 @@ POST http://localhost:3000/lists
 Content-Type: application/json
 
 {
-"name": "My List1"
+"name": "My List Primeiro Banco depois CRM"
 }
 ###
 PATCH http://localhost:3000/lists/2
 Content-Type: application/json
 
 {
-"name": "My List List"
+"name": "My List "
 }
 
 ###
 DELETE http://localhost:3000/lists/1
-
 
 ###
 GET http://localhost:8000/lists
