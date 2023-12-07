@@ -1,26 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { CreateListDto } from './dto/create-list.dto';
 import { UpdateListDto } from './dto/update-list.dto';
-import { List } from './entities/list.entity';
+import {ListModel} from './entities/list.model';
 import { InjectModel } from '@nestjs/sequelize';
-import { error } from 'console';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
+import { ListGatewayInterface } from './gateways/list-gateway-interface';
+import { List } from './entities/list.entity';
+
+/*REGRA DE NEGÓCIO:
+Criar uma Lista no banco de dados e no CRM externo
+*/
 
 @Injectable()
 export class ListsService {
 
-  //instancia que vai tá no bd e tipando com o typeof do TS  
-  //usando o decorator para injetar a instencia passando como param o tipo do dado
   constructor(
-    @InjectModel(List)
-    private listModel: typeof List,
+    @InjectModel(ListModel)
+    private listGateway: ListGatewayInterface,//porta
     //vem do axios 
     private httpService: HttpService,
   ) {};
+
+
+ //usando o axios alem de criar vou precisar fazer o envio via http para crm externo
   async create(createListDto: CreateListDto) {
-    //usando o axios alem de criar vou precisar fazer o envio via http para crm externo
-    const list = await this.listModel.create(createListDto);
+    const list = new List(createListDto.name);
+    await this.listGateway.create(list);
     //post pq será inserido no crm uasndo o lastValueFrom para trasnforma em uma promisse
     await lastValueFrom(
     this.httpService.post('lists',{
@@ -31,11 +37,11 @@ export class ListsService {
   }
 
   findAll() {
-    return this.listModel.findAll();
+    return this.listGateway.finalAll();
   }
 
   async findOne(id: number) {
-    const list = await this.listModel.findByPk(id);
+    const list = await this.listGateway.findById(id);
     if (!list) {
       throw new Error('List not found');
     }
@@ -43,23 +49,23 @@ export class ListsService {
   }
 
   async update(id: number, updateListDto: UpdateListDto) {
-    const list = await this.listModel.findByPk(id);
+    const list = await this.listGateway.findById(id);
 
     if (!list) {
       throw new Error('List not found');
     }
-    await list.update(updateListDto)
+    await this.listGateway.update(id,updateListDto)
     return list;
   }
 
   async remove(id: number) {
-    const list = await this.listModel.findByPk(id);
+    const list = await this.listGateway.findById(id);
 
     if (!list) {
       throw new Error('List not found');
     }
 
-    await list.destroy(); // Use o método destroy na instância específica do modelo
+    await this.listGateway.remove;
   }
 
 }

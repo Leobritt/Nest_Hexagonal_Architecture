@@ -1,16 +1,12 @@
-import { type } from 'os';
-import { Column, Model, Table } from 'sequelize-typescript';
-
-//usar para salvar de fomrma mais tipada
-export type ListAttributes = {
+//entidade parecida com o model, mas que tenha mais liberdade e dependa menos de tec no caso o sequalize 
+export class List{
 name: string;
+id: string;
+
+constructor(name: string, id?: string){
+this.id = id;
+this.name = name;
+
 }
-
-
-@Table
-export class List extends Model<ListAttributes>{
-//extends Model do sequelize-typescript
-@Column
-name: string;
 
 }
